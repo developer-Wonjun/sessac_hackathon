@@ -12,7 +12,14 @@ router = APIRouter()
 auth_handler = AuthHandler()
 
 
-@router.get('/info',tags=["user"] ,status_code=200)
+@router.get('/info',tags=["user"],
+    description="""
+<h1>유저 정보 가져오는 API</h1>
+
+---
+<h2>요구 헤더</h2>
+- Authorization : token
+             """ ,status_code=200)
 def user_info(uuid=Depends(auth_handler.auth_wrapper) ,db:Session=Depends(db)):
 
     try:
@@ -24,7 +31,6 @@ def user_info(uuid=Depends(auth_handler.auth_wrapper) ,db:Session=Depends(db)):
         user_created_time = str(user.created_time)
 
         return JSONResponse({'user_nickname' :  user_nickname,
-                             'user_character_type' : user_character_type,
                              'user_point' : user_point,
                              'user_created_time' : user_created_time}, status_code = 200)
     
@@ -32,7 +38,12 @@ def user_info(uuid=Depends(auth_handler.auth_wrapper) ,db:Session=Depends(db)):
         return JSONResponse({'error ' : e}, status_code = 400)
 
 
-@router.put('/info', tags=['user'], status_code = 201)
+@router.put('/info',
+    description="""
+<h1>닉네임 변경 API - 사용 안함</h1>
+
+---
+             """, tags=['user'], status_code = 201)
 def change_info(data : SignUp,uuid=Depends(auth_handler.auth_wrapper) ,db:Session=Depends(db)):
     
     try:
