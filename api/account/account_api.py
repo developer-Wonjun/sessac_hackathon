@@ -10,7 +10,14 @@ router = APIRouter()
 auth_handler = AuthHandler()
 
 
-@router.post('/signin',tags=["account"] ,status_code=201)
+@router.post('/signin',
+    description="""
+<h1>로그인 API</h1>
+
+---
+<h2>요구 Body</h2>
+- uuid : str
+             """,tags=["account"] ,status_code=201)
 def login(data :UuidCheck ,db:Session=Depends(db)):
     uuid = data.uuid
     
@@ -24,13 +31,21 @@ def login(data :UuidCheck ,db:Session=Depends(db)):
         return JSONResponse({'msg' : 'user not exist'}, status_code = 412)
         
 
-@router.post('/signup',tags=["account"] ,status_code=201)
+@router.post('/signup',
+    description="""
+<h1>회원가입 API</h1>
+
+---
+<h2>요구 Body</h2>
+- uuid : str
+- nickname : str
+             """,tags=["account"] ,status_code=201)
 def register(data :SignUp ,db:Session=Depends(db)):
 
     try:
         uuid = data.uuid
         nickname = data.nickname
-        character_type = data.character_type
+        character_type = 1 # 디폴트 값
         
         register_user = User(uuid = uuid,
                             nickname = nickname,
