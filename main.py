@@ -6,7 +6,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from api.account import account_api
 from api.users import user_api
-
+from api.scheduling import scheduling_api
 # from log_setting import logger
 
 import time
@@ -15,6 +15,7 @@ import time
 def include_router(app):
     app.include_router(account_api.router, prefix="/api/account")
     app.include_router(user_api.router, prefix="/api/user")
+    app.include_router(scheduling_api.router, prefix="/api/scheduling")
 
 
 def start_application():
