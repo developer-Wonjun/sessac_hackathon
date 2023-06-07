@@ -10,6 +10,26 @@ router = APIRouter()
 auth_handler = AuthHandler()
 
 
+@router.post('/check',
+    description="""
+<h1>로그인 API</h1>
+
+---
+<h2>요구 Body</h2>
+- uuid : str
+             """,tags=["account"] ,status_code=201)
+def user_check(data :UuidCheck ,db:Session=Depends(db)):
+    uuid = data.uuid
+    
+    try:
+        user = db.query(User).filter(User.uuid == uuid).one()
+
+        return JSONResponse({'msg' : 'user exist'}, status_code = 200)
+    
+    except:
+        return JSONResponse({'msg' : 'user not exist'}, status_code = 201)
+
+
 @router.post('/signin',
     description="""
 <h1>로그인 API</h1>
@@ -27,8 +47,8 @@ def login(data :UuidCheck ,db:Session=Depends(db)):
 
         return JSONResponse({'token' :  token}, status_code = 201)
     
-    except:
-        return JSONResponse({'msg' : 'user not exist'}, status_code = 412)
+    except Exception as e:
+        return JSONResponse({'msg' : e}, status_code = 412)
         
 
 @router.post('/signup',
@@ -46,18 +66,20 @@ def register(data :SignUp ,db:Session=Depends(db)):
         uuid = data.uuid
         nickname = data.nickname
         character_type = 1 # 디폴트 값
-        
+        point = 0 
         register_user = User(uuid = uuid,
                             nickname = nickname,
-                            character_type = character_type
+                            character_type = character_type,
+                            point = point,
+                            created_time = datetime.now()
         )    
         db.add(register_user)
         db.commit()
         token = auth_handler.encode_token(uuid)
         
         return JSONResponse({'token' : token}, status_code =201)
-    except:
-        return JSONResponse({'msg': 'err'}, 400)
+    except Exception as e:
+        return JSONResponse({'msg': e}, 400)
 
 # @router.get('/address',tags=["account"] ,status_code=200)
 # def get_address(db:Session=Depends(db)):
