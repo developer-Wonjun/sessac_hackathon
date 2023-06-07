@@ -16,7 +16,11 @@ auth_handler = AuthHandler()
 
 ---
 <h2>요구 Body</h2>
-- uuid : str
+- uuid : str<br>
+
+<b>Response status code</b><br>
+- 200 : 유저 존재 o -> 로그인 api 호출 <br>
+- 201 : 유저 존재 x -> 회원가입 플로우 진입
              """,tags=["account"] ,status_code=201)
 def user_check(data :UuidCheck ,db:Session=Depends(db)):
     uuid = data.uuid
