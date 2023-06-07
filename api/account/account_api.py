@@ -12,7 +12,7 @@ auth_handler = AuthHandler()
 
 @router.post('/check',
     description="""
-<h1>로그인 API</h1>
+<h1>유저 존재 체크 API</h1>
 
 ---
 <h2>요구 Body</h2>
