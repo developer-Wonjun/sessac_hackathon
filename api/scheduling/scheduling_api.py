@@ -61,11 +61,12 @@ def create_schedule(data :create_schedule ,uuid=Depends(auth_handler.auth_wrappe
         # if user_point + stress[stress_step] < 0 :
         #     user.point = 0
         # else:
-        user.point = user_point + stress[stress_step]
+        new_user_point = round(user_point + stress[stress_step],3)
+        user.point = new_user_point
         
         db.commit()
         
-        return JSONResponse({'msg': 'schedule created success'} ,status_code=201)
+        return JSONResponse({'user_point': new_user_point} ,status_code=201)
     
     except Exception as e:
         return JSONResponse({'error' : e}, status_code = 400)
@@ -103,7 +104,10 @@ def modify_schedule(data :modify_schedule ,uuid=Depends(auth_handler.auth_wrappe
         #     if user_point - stress[schedule.stress_step] + stress[stress_step] < 0 :
         #         user.point = 0
         #     else:
-            user.point = user_point - stress[schedule.stress_step] + stress[stress_step]
+            new_user_point = round(user_point - stress[schedule.stress_step] + stress[stress_step],3)
+            user.point = new_user_point
+        else:
+            new_user_point = user.point
 
         schedule.schedule_content = schedule_content
         schedule.schedule_date = schedule_date
@@ -111,8 +115,8 @@ def modify_schedule(data :modify_schedule ,uuid=Depends(auth_handler.auth_wrappe
         schedule.stress_step = stress_step
         
         db.commit()
-
-        return JSONResponse({'msg': 'schedule modify success'} ,status_code=201)
+        
+        return JSONResponse({'user_point': new_user_point} ,status_code=201)
     
     except Exception as e:
         return JSONResponse({'error' : e}, status_code = 400)
@@ -137,13 +141,14 @@ def delete_schedule(data :delete_schedule ,uuid=Depends(auth_handler.auth_wrappe
         # if user_point - stress[stress_step] < 0:
         #     user.point = 0
         # else:
-        user.point = user_point - stress[stress_step]
+        new_user_point = round(user_point - stress[stress_step],3)
+        user.point = new_user_point
         
         db.query(Schedule).filter(Schedule.id == data.schedule_id).delete()
         
         db.commit()
             
-        return JSONResponse({'msg': 'schedule delete success'} ,status_code=201)
+        return JSONResponse({'user_point': new_user_point} ,status_code=201)
     
     except Exception as e:
         return JSONResponse({'error' : e}, status_code = 400)
