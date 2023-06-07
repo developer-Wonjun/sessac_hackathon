@@ -29,7 +29,7 @@ class User(Base):
     id = Column(BigInteger, primary_key=True)
     uuid = Column(String(100), nullable=False)
     nickname = Column(String(45))
-    point = Column(Integer, nullable=False)
+    point = Column(Integer)
     character_type = Column(Integer, nullable=False)
     created_time = Column(DateTime)
     
