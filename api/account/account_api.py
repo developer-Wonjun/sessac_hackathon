@@ -68,6 +68,8 @@ def register(data :SignUp ,db:Session=Depends(db)):
 
     try:
         uuid = data.uuid
+        if db.query(User).filter(User.uuid == uuid).first() != None:
+            return JSONResponse({'msg': 'user exist'}, 412)
         nickname = data.nickname
         character_type = 1 # 디폴트 값
         point = 0 
